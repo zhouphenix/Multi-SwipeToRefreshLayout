@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <declare-styleable name="SwipeToRefreshLayout">
+       <attr name="contentView" format="reference"/>
+       <attr name="leftView" format="reference"/>
+       <attr name="topView" format="reference"/>
+       <attr name="rightView" format="reference"/>
+       <attr name="bottomView" format="reference"/>
+       <attr name="swipeDirection">
+           <flag name="left" value="0x1"/>
+           <flag name="top" value="0x2"/>
+           <flag name="right" value="0x4"/>
+           <flag name="bottom" value="0x8"/>
+       </attr>
+   </declare-styleable>
+
+
+</resources>
