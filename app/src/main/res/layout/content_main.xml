@@ -10,16 +10,15 @@
     tools:showIn="@layout/app_bar_main"
     tools:context="lib.phenix.com.views.MainActivity">
 
-    <lib.phenix.com.swipetorefresh.SwipeToRefreshLayout
+    <lib.phenix.com.swipetorefresh.OverScrollLayout
         android:background="@color/colorAccent"
         app:swipeDirection="left|top|right|bottom"
         app:contentView="@layout/layout_example"
         app:topView="@layout/layout_horizontal"
-        app:rightView="@layout/layout_vertical"
         app:bottomView="@layout/layout_horizontal"
         app:leftView="@layout/layout_vertical"
         android:layout_height="match_parent"
         android:layout_width="match_parent">
-    </lib.phenix.com.swipetorefresh.SwipeToRefreshLayout>
+    </lib.phenix.com.swipetorefresh.OverScrollLayout>
 
 </RelativeLayout>
