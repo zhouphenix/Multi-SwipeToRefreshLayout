@@ -2,9 +2,8 @@ package lib.phenix.com.views;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,9 +11,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import lib.phenix.com.views.fragments.NormalFragment;
+import lib.phenix.com.views.fragments.RecyclerFragment;
+import lib.phenix.com.views.fragments.ScrollFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    NormalFragment normal;
+    ScrollFragment scroll;
+    RecyclerFragment recycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        normal = new NormalFragment();
+        scroll = new ScrollFragment();
+        recycler = new RecyclerFragment();
+
+        getSupportFragmentManager().beginTransaction().add(R.id.container,scroll).commit();
+
     }
 
     @Override
@@ -67,8 +82,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_normal:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,normal).commit();
+                break;
+            case R.id.action_scroll:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,scroll).commit();
+                break;
+            case R.id.action_recycler:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,recycler).commit();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -98,4 +121,8 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
 }

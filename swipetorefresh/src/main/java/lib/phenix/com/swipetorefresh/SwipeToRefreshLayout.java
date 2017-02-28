@@ -94,7 +94,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
         mViewDragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelperCallback());
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SwipeToRefreshLayout);
-        int contentLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_contentView, View.NO_ID);
+        int contentLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_contentLayoutId, View.NO_ID);
         int leftLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_leftView, View.NO_ID);
         int topLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_topView, View.NO_ID);
         int rightLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_rightView, View.NO_ID);
@@ -105,8 +105,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
         LayoutInflater inflater = LayoutInflater.from(context);
 
         if (View.NO_ID != contentLayoutId) {
-            mContentView = inflater.inflate(contentLayoutId, this, false);
-            addView(mContentView, 0);
+            mContentView = findViewById(contentLayoutId);
         } else {
             throw new IllegalStateException("请为您的SwipeToRefreshLayout设置主体布局，详细参考SwipeToRefreshLayout配置文档");
         }

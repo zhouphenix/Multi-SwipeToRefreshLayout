@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lib.phenix.com.swipetorefresh.OverScrollLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/overscroll"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/app_bar_main"
+    tools:context="lib.phenix.com.views.MainActivity"
+    app:swipeDirection="left|top|right|bottom"
+    app:contentLayoutId="@+id/content"
+    app:topView="@layout/layout_horizontal"
+    app:bottomView="@layout/layout_horizontal"
+    app:leftView="@layout/layout_vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@android:color/background_light"
+            android:text="这是测试页start" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@android:color/holo_red_light"
+            android:text="这是测试页2" />
+    </LinearLayout>
+</lib.phenix.com.swipetorefresh.OverScrollLayout>
+

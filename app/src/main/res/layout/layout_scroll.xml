@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lib.phenix.com.swipetorefresh.OverScrollLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/overscroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:bottomView="@layout/layout_horizontal"
+    app:contentLayoutId="@+id/scroll"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    app:leftView="@layout/layout_vertical"
+    app:swipeDirection="left|top|right|bottom"
+    app:topView="@layout/layout_horizontal">
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@android:color/background_light"
+                android:text="这是测试页start" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:background="@android:color/holo_red_light"
+                android:text="这是测试页2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:text="这是测试页3" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:background="@android:color/holo_blue_bright"
+                android:text="这是测试页4" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:background="@android:color/holo_green_light"
+                android:text="这是测试页end" />
+        </LinearLayout>
+    </ScrollView>
+</lib.phenix.com.swipetorefresh.OverScrollLayout>

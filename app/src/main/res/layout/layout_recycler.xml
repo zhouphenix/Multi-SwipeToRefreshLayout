@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lib.phenix.com.swipetorefresh.OverScrollLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/overscroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:bottomView="@layout/layout_horizontal"
+    app:contentLayoutId="@+id/recyclerView"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    app:leftView="@layout/layout_vertical"
+    app:swipeDirection="left|top|right|bottom"
+    app:topView="@layout/layout_horizontal">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</lib.phenix.com.swipetorefresh.OverScrollLayout>

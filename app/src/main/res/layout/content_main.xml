@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/content_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/container"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_main"
-    tools:context="lib.phenix.com.views.MainActivity">
+    tools:context="lib.phenix.com.views.MainActivity"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    ></FrameLayout>
 
-    <lib.phenix.com.swipetorefresh.OverScrollLayout
-        android:background="@color/colorAccent"
-        app:swipeDirection="left|top|right|bottom"
-        app:contentView="@layout/layout_example"
-        app:topView="@layout/layout_horizontal"
-        app:bottomView="@layout/layout_horizontal"
-        app:leftView="@layout/layout_vertical"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-    </lib.phenix.com.swipetorefresh.OverScrollLayout>
-
-</RelativeLayout>

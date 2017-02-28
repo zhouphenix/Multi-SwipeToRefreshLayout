@@ -4,6 +4,7 @@
 ## 更新（Update）
 _**2017-2-28**_
  * 提交OverScrollLayout，ScrollView版已测试No problem
+ * 适配了下普通布局，RecyclerView，OK
 
 
 
@@ -28,16 +29,24 @@ _**2017-2-28**_
 
 * OverScrollLayout
 
-        <lib.phenix.com.swipetorefresh.OverScrollLayout
-            android:background="@color/colorAccent"
-            app:swipeDirection="left|top|right|bottom"
-            app:contentView="@layout/layout_example"
-            app:topView="@layout/layout_horizontal"
-            //app:rightView="@layout/layout_vertical"  空View实现
+        <lib.phenix.com.swipetorefresh.OverScrollLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/overscroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:bottomView="@layout/layout_horizontal"
+            app:contentLayoutId="@+id/scroll" //主布局id
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:leftView="@layout/layout_vertical"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
+            //app:rightView="@layout/layout_vertical" 空View实现
+            app:swipeDirection="left|top|right|bottom"
+            app:topView="@layout/layout_horizontal">
+
+            <ScrollView
+                android:id="@+id/scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </ScrollView>
         </lib.phenix.com.swipetorefresh.OverScrollLayout>
 
 ## 效果

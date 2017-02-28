@@ -63,6 +63,7 @@ public class OverScrollLayout extends ViewGroup {
      * 主体View
      */
     private View mContentView;
+    int contentLayoutId;
     private View mLeftView;
     private View mRightView;
     private View mBottomView;
@@ -86,29 +87,22 @@ public class OverScrollLayout extends ViewGroup {
         enableSwipe = true;
     }
 
-
     public OverScrollLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         mViewDragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelperCallback());
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SwipeToRefreshLayout);
-        int contentLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_contentView, View.NO_ID);
+        contentLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_contentLayoutId, View.NO_ID);
         int leftLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_leftView, View.NO_ID);
         int topLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_topView, View.NO_ID);
         int rightLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_rightView, View.NO_ID);
         int bottomLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_bottomView, View.NO_ID);
         mDirectionMask = ta.getInt(R.styleable.SwipeToRefreshLayout_swipeDirection, mDirectionMask);
-        mFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_percent, 0.3f);
+        mFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_swipeDistancePercent, 0.3f);
         ta.recycle();
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        if (View.NO_ID != contentLayoutId) {
-            mContentView = inflater.inflate(contentLayoutId, this, false);
-            addView(mContentView, 0);
-        } else {
-            throw new IllegalStateException("请为您的SwipeToRefreshLayout设置主体布局，详细参考SwipeToRefreshLayout配置文档");
-        }
         if (View.NO_ID != leftLayoutId) {
             mLeftView = inflater.inflate(leftLayoutId, this, false);
             addView(mLeftView);
@@ -128,6 +122,16 @@ public class OverScrollLayout extends ViewGroup {
         enableSwipe = true;
     }
 
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        if (View.NO_ID != contentLayoutId) {
+            mContentView = findViewById(contentLayoutId);
+            Log.e("zhou", contentLayoutId+"--------------"+mContentView);
+        } else {
+            throw new IllegalStateException("请为OverScrollLayout添加contentLayoutId属性，以索引目标View");
+        }
+    }
 
     /**
      * 设置拖动百分比限制
@@ -297,6 +301,7 @@ public class OverScrollLayout extends ViewGroup {
             marginLayoutParams = (MarginLayoutParams) mContentView.getLayoutParams();
             switch (mCurrentDirection & mDirectionMask) {
                 case LEFT:
+                case RIGHT:
                     if (null != mLeftView){
                         otherParams = (MarginLayoutParams) mLeftView.getLayoutParams();
                         mLeftView.layout(
@@ -305,17 +310,6 @@ public class OverScrollLayout extends ViewGroup {
                                 mContentView.getLeft() - marginLayoutParams.leftMargin - otherParams.rightMargin,
                                 mLeftView.getBottom());
                     }
-                    break;
-                case TOP:
-                    if (null != mTopView) {
-                        otherParams = (MarginLayoutParams) mTopView.getLayoutParams();
-                        mTopView.layout(mTopView.getLeft(),
-                                mContentView.getTop() - marginLayoutParams.topMargin - mTopView.getMeasuredHeight() - otherParams.topMargin - otherParams.bottomMargin,
-                                mTopView.getRight(),
-                                mContentView.getTop() - marginLayoutParams.topMargin - otherParams.bottomMargin);
-                    }
-                    break;
-                case RIGHT:
                     if (null != mRightView) {
                         otherParams = (MarginLayoutParams) mRightView.getLayoutParams();
                         mRightView.layout(mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin,
@@ -324,7 +318,15 @@ public class OverScrollLayout extends ViewGroup {
                                 mRightView.getBottom());
                     }
                     break;
+                case TOP:
                 case BOTTOM:
+                    if (null != mTopView) {
+                        otherParams = (MarginLayoutParams) mTopView.getLayoutParams();
+                        mTopView.layout(mTopView.getLeft(),
+                                mContentView.getTop() - marginLayoutParams.topMargin - mTopView.getMeasuredHeight() - otherParams.topMargin - otherParams.bottomMargin,
+                                mTopView.getRight(),
+                                mContentView.getTop() - marginLayoutParams.topMargin - otherParams.bottomMargin);
+                    }
                     if (null != mBottomView) {
                         otherParams = (MarginLayoutParams) mBottomView.getLayoutParams();
                         mBottomView.layout(mTopView.getLeft(),
@@ -420,7 +422,18 @@ public class OverScrollLayout extends ViewGroup {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         boolean handled = false;
+        calculateForCurrentDirection(event);
         if (isEnabled()) {
+            handled = mViewDragHelper.shouldInterceptTouchEvent(event);
+        } else {
+            mViewDragHelper.cancel();
+        }
+        if (!handled) mCurrentDirection = NONE;
+        return handled || super.onInterceptTouchEvent(event);
+    }
+
+    private void calculateForCurrentDirection(MotionEvent event) {
+        if (isEnabled()){
             mTouchX = event.getRawX();
             mTouchY = event.getRawY();
             final int action = event.getActionMasked();
@@ -437,16 +450,12 @@ public class OverScrollLayout extends ViewGroup {
                 }
                 Log.e("zhou", "++++++++++mCurrentDirection++++++++++++++++++"+mCurrentDirection);
             }
-            handled = mViewDragHelper.shouldInterceptTouchEvent(event);
-        } else {
-            mViewDragHelper.cancel();
         }
-        if (!handled) mCurrentDirection = NONE;
-        return handled || super.onInterceptTouchEvent(event);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        calculateForCurrentDirection(event);
         mViewDragHelper.processTouchEvent(event);
         return true;
     }

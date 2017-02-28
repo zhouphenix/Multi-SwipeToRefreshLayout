@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    <declare-styleable name="SwipeToRefreshLayout">
-       <attr name="contentView" format="reference"/>
+       <attr name="contentLayoutId" format="reference"/>
        <attr name="leftView" format="reference"/>
        <attr name="topView" format="reference"/>
        <attr name="rightView" format="reference"/>
@@ -12,7 +12,7 @@
            <flag name="right" value="0x4"/>
            <flag name="bottom" value="0x8"/>
        </attr>
-       <attr name="percent" format="float"/>
+       <attr name="swipeDistancePercent" format="float"/>
    </declare-styleable>
 
 
