@@ -4,7 +4,7 @@
 ## 更新（Update）
 _**2017-2-28**_
  * 提交OverScrollLayout，ScrollView版已测试No problem
- * 适配了下普通布局，RecyclerView，OK
+ * 适配了下普通布局、RecyclerView、WebView、ViewPager（左右），效果都OK
 
 
 

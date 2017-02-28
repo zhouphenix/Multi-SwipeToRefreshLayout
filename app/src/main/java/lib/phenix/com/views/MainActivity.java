@@ -16,6 +16,8 @@ import android.view.View;
 import lib.phenix.com.views.fragments.NormalFragment;
 import lib.phenix.com.views.fragments.RecyclerFragment;
 import lib.phenix.com.views.fragments.ScrollFragment;
+import lib.phenix.com.views.fragments.ViewPagerFragment;
+import lib.phenix.com.views.fragments.WebViewFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity
     NormalFragment normal;
     ScrollFragment scroll;
     RecyclerFragment recycler;
+    WebViewFragment web;
+    ViewPagerFragment pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,8 @@ public class MainActivity extends AppCompatActivity
         normal = new NormalFragment();
         scroll = new ScrollFragment();
         recycler = new RecyclerFragment();
+        web = new WebViewFragment();
+        pager = new ViewPagerFragment();
 
         getSupportFragmentManager().beginTransaction().add(R.id.container,scroll).commit();
 
@@ -91,6 +97,12 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_recycler:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container,recycler).commit();
+                break;
+            case R.id.action_web:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,web).commit();
+                break;
+            case R.id.action_pager:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,pager).commit();
                 break;
         }
 

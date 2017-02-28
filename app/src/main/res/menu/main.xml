@@ -13,4 +13,12 @@
         android:title="@string/action_recycler"
         android:orderInCategory="102"
         app:showAsAction="never" />
+    <item android:id="@+id/action_web"
+        android:title="@string/action_web"
+        android:orderInCategory="103"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_pager"
+        android:title="@string/action_pager"
+        android:orderInCategory="104"
+        app:showAsAction="never" />
 </menu>
