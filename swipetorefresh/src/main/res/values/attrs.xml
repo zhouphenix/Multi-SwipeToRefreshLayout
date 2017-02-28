@@ -12,6 +12,7 @@
            <flag name="right" value="0x4"/>
            <flag name="bottom" value="0x8"/>
        </attr>
+       <attr name="percent" format="float"/>
    </declare-styleable>
 
 

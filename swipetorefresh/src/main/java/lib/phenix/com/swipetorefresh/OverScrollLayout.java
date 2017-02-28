@@ -98,6 +98,7 @@ public class OverScrollLayout extends ViewGroup {
         int rightLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_rightView, View.NO_ID);
         int bottomLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_bottomView, View.NO_ID);
         mDirectionMask = ta.getInt(R.styleable.SwipeToRefreshLayout_swipeDirection, mDirectionMask);
+        mFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_percent, 0.3f);
         ta.recycle();
 
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -127,6 +128,44 @@ public class OverScrollLayout extends ViewGroup {
         enableSwipe = true;
     }
 
+
+    /**
+     * 设置拖动百分比限制
+     * @param mFactor
+     */
+    public void setFactor(float mFactor) {
+        this.mFactor = mFactor;
+    }
+
+    public void enableSwipe(boolean enableSwipe) {
+        this.enableSwipe = enableSwipe;
+    }
+    /**
+     * 添加可以direction划动
+     *
+     * @param direction SwipeDirection
+     */
+    public void enableDragDirection(int direction) {
+        mDirectionMask |= direction;
+    }
+
+    /**
+     * 删除可以direction划动
+     *
+     * @param direction SwipeDirection
+     */
+    public void disableDragDirection(int direction) {
+        mDirectionMask &= ~direction;
+    }
+
+    /**
+     * 是否禁用了direction
+     * @param direction SwipeDirection 禁用了该方向
+     * @return boolean
+     */
+    public boolean isNotAllowDragDirection(int direction) {
+        return (mDirectionMask & direction) == 0;
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
