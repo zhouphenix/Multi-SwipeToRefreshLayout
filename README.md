@@ -44,5 +44,5 @@ _**2017-2-28**_
 
 * OverScrollLayout
 
-![OverScrollLayout效果gif](screenshots.gif)
+![OverScrollLayout效果gif](screenshots/overscroll.gif)
 
