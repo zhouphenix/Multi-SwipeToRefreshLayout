@@ -3,6 +3,9 @@
 
 ## 更新（Update）
 _**2017-2-28**_
+ * 提交了WebView，ViewPager Demo及效果,准备发布OverScrollLayout，下一版做刷新
+
+_**2017-2-28**_
  * 提交OverScrollLayout，ScrollView版已测试No problem
  * 适配了下普通布局、RecyclerView、WebView、ViewPager（左右），效果都OK
 
@@ -26,6 +29,7 @@ _**2017-2-28**_
 
 
 ## 使用（Usage）
+
 
 * OverScrollLayout
 
@@ -54,4 +58,6 @@ _**2017-2-28**_
 * OverScrollLayout
 
 ![OverScrollLayout效果gif](screenshots/overscroll.gif)
+
+![OverScrollLayout效果2gif](screenshots/overscroll2.gif)
 

@@ -2,6 +2,7 @@ package lib.phenix.com.views.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -29,6 +30,9 @@ public class ViewPagerFragment extends Fragment {
         ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
         SimplePagerAdapter pagerAdapter = new SimplePagerAdapter(getChildFragmentManager(), ScrollFragment.class,RecyclerFragment.class,WebViewFragment.class);
         viewPager.setAdapter(pagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
         return v;
     }
 

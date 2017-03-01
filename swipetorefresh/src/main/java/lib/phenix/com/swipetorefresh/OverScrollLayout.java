@@ -29,10 +29,12 @@ public class OverScrollLayout extends ViewGroup {
     public static final int RIGHT = 1 << 2;
     public static final int BOTTOM = 1 << 3;
 
+
     @IntDef({NONE, LEFT, TOP, RIGHT, BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SwipeDirection {
     }
+
 
     private final ViewDragHelper mViewDragHelper;
 
@@ -41,6 +43,7 @@ public class OverScrollLayout extends ViewGroup {
     @SwipeDirection int mCurrentDirection;
 
     boolean enableSwipe;
+
 
     int mOriginX;
     int mOriginY;
@@ -68,6 +71,7 @@ public class OverScrollLayout extends ViewGroup {
     private View mRightView;
     private View mBottomView;
     private View mTopView;
+
 
     /**
      * 当前touch的坐标
@@ -127,11 +131,11 @@ public class OverScrollLayout extends ViewGroup {
         super.onFinishInflate();
         if (View.NO_ID != contentLayoutId) {
             mContentView = findViewById(contentLayoutId);
-            Log.e("zhou", contentLayoutId+"--------------"+mContentView);
         } else {
             throw new IllegalStateException("请为OverScrollLayout添加contentLayoutId属性，以索引目标View");
         }
     }
+
 
     /**
      * 设置拖动百分比限制
@@ -206,6 +210,8 @@ public class OverScrollLayout extends ViewGroup {
         int width = cMarginParams.leftMargin + mContentView.getMeasuredWidth() + cMarginParams.rightMargin;
         int height = cMarginParams.topMargin + mContentView.getMeasuredHeight() + cMarginParams.bottomMargin;
 
+
+
         setMeasuredDimension(widthMode == MeasureSpec.EXACTLY ? widthSize : width, heightMode == MeasureSpec.EXACTLY ? heightSize : height);
     }
 
@@ -213,14 +219,17 @@ public class OverScrollLayout extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         /**mContentView*/
         MarginLayoutParams marginLayoutParams = (MarginLayoutParams) mContentView.getLayoutParams();
-        int cl = marginLayoutParams.leftMargin;
-        int ct = marginLayoutParams.topMargin;
+        int cl = marginLayoutParams.leftMargin ;
+        int ct = marginLayoutParams.topMargin ;
         int cr = cl + mContentView.getMeasuredWidth() - marginLayoutParams.leftMargin - marginLayoutParams.rightMargin;
         int cb = ct + mContentView.getMeasuredHeight();
         mContentView.layout(cl, ct, cr, cb);
         mOriginX = mContentView.getLeft();
         mOriginY = mContentView.getTop();
         MarginLayoutParams otherParams;
+
+        int expand = 0;
+
         /**mLeftView*/
         if (null != mLeftView) {
             otherParams = (MarginLayoutParams) mLeftView.getLayoutParams();
@@ -229,6 +238,15 @@ public class OverScrollLayout extends ViewGroup {
             cr = mContentView.getLeft() - marginLayoutParams.leftMargin - otherParams.rightMargin;
             cb = mContentView.getBottom() - otherParams.bottomMargin;
             mLeftView.layout(cl, ct, cr, cb);
+        }
+        /**mRightView*/
+        if (null != mRightView) {
+            otherParams = (MarginLayoutParams) mRightView.getLayoutParams();
+            cl = mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin ;
+            ct = mContentView.getTop() + otherParams.topMargin;
+            cr = mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin + mRightView.getMeasuredWidth() + otherParams.rightMargin;
+            cb = mContentView.getBottom() - otherParams.bottomMargin;
+            mRightView.layout(cl, ct, cr, cb);
         }
 
         /**mTopView*/
@@ -241,15 +259,6 @@ public class OverScrollLayout extends ViewGroup {
             mTopView.layout(cl, ct, cr, cb);
         }
 
-        /**mRightView*/
-        if (null != mRightView) {
-            otherParams = (MarginLayoutParams) mRightView.getLayoutParams();
-            cl = mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin;
-            ct = mContentView.getTop() + otherParams.topMargin;
-            cr = mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin + mRightView.getMeasuredWidth() + otherParams.rightMargin;
-            cb = mContentView.getBottom() - otherParams.bottomMargin;
-            mRightView.layout(cl, ct, cr, cb);
-        }
 
         /**mBottomView*/
         if (null != mBottomView) {
@@ -296,44 +305,21 @@ public class OverScrollLayout extends ViewGroup {
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
-            mDragOffset = mCurrentDirection == LEFT || mCurrentDirection == RIGHT ? Math.abs(left) : Math.abs(top);
-            MarginLayoutParams marginLayoutParams, otherParams;
+            mDragOffset = dx != 0 ? Math.abs(left) : Math.abs(top);
+            MarginLayoutParams marginLayoutParams;
             marginLayoutParams = (MarginLayoutParams) mContentView.getLayoutParams();
-            switch (mCurrentDirection & mDirectionMask) {
+            switch (mCurrentDirection) {
                 case LEFT:
                 case RIGHT:
-                    if (null != mLeftView){
-                        otherParams = (MarginLayoutParams) mLeftView.getLayoutParams();
-                        mLeftView.layout(
-                                mContentView.getLeft() - marginLayoutParams.leftMargin - (otherParams.leftMargin + mLeftView.getMeasuredWidth() + otherParams.rightMargin),
-                                mLeftView.getTop(),
-                                mContentView.getLeft() - marginLayoutParams.leftMargin - otherParams.rightMargin,
-                                mLeftView.getBottom());
-                    }
-                    if (null != mRightView) {
-                        otherParams = (MarginLayoutParams) mRightView.getLayoutParams();
-                        mRightView.layout(mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin,
-                                mRightView.getTop(),
-                                mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin + mRightView.getMeasuredWidth() + otherParams.rightMargin,
-                                mRightView.getBottom());
-                    }
+                    layoutLeftAndRight(marginLayoutParams);
                     break;
                 case TOP:
                 case BOTTOM:
-                    if (null != mTopView) {
-                        otherParams = (MarginLayoutParams) mTopView.getLayoutParams();
-                        mTopView.layout(mTopView.getLeft(),
-                                mContentView.getTop() - marginLayoutParams.topMargin - mTopView.getMeasuredHeight() - otherParams.topMargin - otherParams.bottomMargin,
-                                mTopView.getRight(),
-                                mContentView.getTop() - marginLayoutParams.topMargin - otherParams.bottomMargin);
-                    }
-                    if (null != mBottomView) {
-                        otherParams = (MarginLayoutParams) mBottomView.getLayoutParams();
-                        mBottomView.layout(mTopView.getLeft(),
-                                mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin,
-                                mTopView.getRight(),
-                                mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin + mBottomView.getMeasuredHeight() + otherParams.bottomMargin);
-                    }
+                    layoutTopAndBottom(marginLayoutParams);
+                    break;
+                case NONE:
+                    layoutLeftAndRight(marginLayoutParams);
+                    layoutTopAndBottom(marginLayoutParams);
                     break;
             }
 
@@ -408,6 +394,43 @@ public class OverScrollLayout extends ViewGroup {
                 return Math.min(Math.max(top, topBounds), bottomBounds);
             }
             return mOriginY;
+        }
+    }
+
+    private void layoutTopAndBottom(MarginLayoutParams marginLayoutParams) {
+        MarginLayoutParams otherParams;
+        if (null != mTopView) {
+            otherParams = (MarginLayoutParams) mTopView.getLayoutParams();
+            mTopView.layout(mTopView.getLeft(),
+                    mContentView.getTop() - marginLayoutParams.topMargin - mTopView.getMeasuredHeight() - otherParams.topMargin - otherParams.bottomMargin,
+                    mTopView.getRight(),
+                    mContentView.getTop() - marginLayoutParams.topMargin - otherParams.bottomMargin);
+        }
+        if (null != mBottomView) {
+            otherParams = (MarginLayoutParams) mBottomView.getLayoutParams();
+            mBottomView.layout(mTopView.getLeft(),
+                    mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin,
+                    mTopView.getRight(),
+                    mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin + mBottomView.getMeasuredHeight() + otherParams.bottomMargin);
+        }
+    }
+
+    private void layoutLeftAndRight(MarginLayoutParams marginLayoutParams) {
+        MarginLayoutParams otherParams;
+        if (null != mLeftView){
+            otherParams = (MarginLayoutParams) mLeftView.getLayoutParams();
+            mLeftView.layout(
+                    mContentView.getLeft() - marginLayoutParams.leftMargin - (otherParams.leftMargin + mLeftView.getMeasuredWidth() + otherParams.rightMargin),
+                    mLeftView.getTop(),
+                    mContentView.getLeft() - marginLayoutParams.leftMargin - otherParams.rightMargin,
+                    mLeftView.getBottom());
+        }
+        if (null != mRightView) {
+            otherParams = (MarginLayoutParams) mRightView.getLayoutParams();
+            mRightView.layout(mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin,
+                    mRightView.getTop(),
+                    mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin + mRightView.getMeasuredWidth() + otherParams.rightMargin,
+                    mRightView.getBottom());
         }
     }
 

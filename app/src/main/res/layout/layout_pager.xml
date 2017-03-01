@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<lib.phenix.com.swipetorefresh.OverScrollLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/overscroll"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:bottomView="@layout/layout_horizontal"
-    app:contentLayoutId="@+id/pager"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    app:swipeDirection="left|right"
-    app:topView="@layout/layout_horizontal">
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+    >
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        app:tabMode="scrollable"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</lib.phenix.com.swipetorefresh.OverScrollLayout>
+        android:layout_height="wrap_content"/>
+
+    <lib.phenix.com.swipetorefresh.OverScrollLayout
+
+        android:id="@+id/overscroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:bottomView="@layout/layout_horizontal"
+        app:contentLayoutId="@+id/pager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:swipeDirection="left|right"
+        app:topView="@layout/layout_horizontal">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </lib.phenix.com.swipetorefresh.OverScrollLayout>
+</LinearLayout>
