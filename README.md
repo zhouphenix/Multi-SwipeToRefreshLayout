@@ -27,6 +27,19 @@ _**2017-2-28**_
 
 事要一件一件做，饭要一口一口吃。
 
+## download
+    allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+    -----------------------------------------------------------
+    dependencies {
+	         compile 'com.github.zhouphenix:Multi-SwipeToRefreshLayout:1.0.0'
+	}
+## exclude
+    compile 'com.android.support:appcompat-v7:25.2.0'
 
 ## 使用（Usage）
 
