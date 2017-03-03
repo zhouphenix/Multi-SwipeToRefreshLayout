@@ -12,6 +12,11 @@
         <item name="windowNoTitle">true</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+        <!-- TODO Actionbar弹出菜单主题设置-->
+        <!--<item name="android:popupBackground">?attr/colorPrimary</item>--><!--：弹出菜单背景色为标题栏的背景色-->
+        <item name="overlapAnchor">false</item><!--弹出框在标题栏下-->
+        <!--<item name="android:dropDownVerticalOffset">0dip</item>--><!--：弹出菜单与标题栏的垂直间距-->
+    </style>
 
 </resources>

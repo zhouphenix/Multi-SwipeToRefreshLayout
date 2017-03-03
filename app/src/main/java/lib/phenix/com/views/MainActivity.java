@@ -15,6 +15,7 @@ import android.view.View;
 
 import lib.phenix.com.views.fragments.NormalFragment;
 import lib.phenix.com.views.fragments.RecyclerFragment;
+import lib.phenix.com.views.fragments.RefreshFragment;
 import lib.phenix.com.views.fragments.ScrollFragment;
 import lib.phenix.com.views.fragments.ViewPagerFragment;
 import lib.phenix.com.views.fragments.WebViewFragment;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity
     RecyclerFragment recycler;
     WebViewFragment web;
     ViewPagerFragment pager;
+    RefreshFragment refresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity
         recycler = new RecyclerFragment();
         web = new WebViewFragment();
         pager = new ViewPagerFragment();
+        refresh = new RefreshFragment();
 
         getSupportFragmentManager().beginTransaction().add(R.id.container,scroll).commit();
 
@@ -127,6 +130,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.nav_refresh){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,refresh).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
