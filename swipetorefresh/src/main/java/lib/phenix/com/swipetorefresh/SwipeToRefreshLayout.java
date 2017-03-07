@@ -643,7 +643,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
                 case LOADING:
                     onRefresh.onLoading();
                     if (null != mOnRefreshCallback)
-                        mOnRefreshCallback.onRefresh();
+                        mOnRefreshCallback.onRefresh(mLockDirection);
                     break;
                 case SETTLING:
                     onRefresh.onSettling();
@@ -862,7 +862,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
         this.mOnRefreshCallback = mOnRefreshCallback;
     }
     public interface OnRefreshCallback{
-        void onRefresh();
+        void onRefresh(@SwipeDirection int direction);
     }
 
 }

@@ -101,7 +101,7 @@ java中调用，这里仿照QQ写了一个Header、footer分别提供了下拉�
                 refresh.setTopView(new QQHeader(getActivity()));
                 refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
                     @Override
-                    public void onRefresh() {
+                    public void onRefresh(int direction) {
                         refresh.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -112,17 +112,6 @@ java中调用，这里仿照QQ写了一个Header、footer分别提供了下拉�
                 });
         
                 refresh.setBottomView(new LoadMoreFooter(getActivity()));
-                refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
-                    @Override
-                    public void onRefresh() {
-                        refresh.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                refresh.refreshCompleted();
-                            }
-                        }, 3000);
-                    }
-                });
 ## 效果
 
 * OverScrollLayout
