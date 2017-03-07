@@ -3,12 +3,14 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:padding="20dp"
+    android:id="@+id/header"
     android:background="@android:color/darker_gray"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
     <ProgressBar
+        android:id="@+id/progress"
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

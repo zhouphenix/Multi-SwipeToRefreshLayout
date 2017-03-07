@@ -3,6 +3,9 @@
 
 ## 更新（Update）
 _**2017-3-3**_
+ * 比较粗糙刷新版提交（效果图），demo暂时用的RecyclerView，细节还未做处理
+
+_**2017-3-3**_
  * 抽屉版提交
 
 _**2017-3-1**_
@@ -69,6 +72,57 @@ _**2017-2-28**_
             </ScrollView>
         </lib.phenix.com.swipetorefresh.OverScrollLayout>
 
+* SwipeToRefreshLayout
+
+xml中配置
+
+        <lib.phenix.com.swipetorefresh.SwipeToRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/refresh"
+            android:background="@color/colorAccent"
+            app:swipeDirection="left|top|right|bottom"
+            app:contentLayoutId="@+id/recyclerView"
+            app:topView="@layout/layout_horizontal"
+            app:bottomView="@layout/layout_horizontal"
+            app:rightView="@layout/layout_vertical"
+            app:leftView="@layout/layout_vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+        
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </lib.phenix.com.swipetorefresh.SwipeToRefreshLayout>
+java中调用，这里仿照QQ写了一个Header、footer分别提供了下拉刷新和上拉加载更多
+       
+        refresh = (SwipeToRefreshLayout) v.findViewById(R.id.refresh);
+                refresh.setTopView(new QQHeader(getActivity()));
+                refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
+                    @Override
+                    public void onRefresh() {
+                        refresh.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                refresh.refreshCompleted();
+                            }
+                        }, 3000);
+                    }
+                });
+        
+                refresh.setBottomView(new LoadMoreFooter(getActivity()));
+                refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
+                    @Override
+                    public void onRefresh() {
+                        refresh.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                refresh.refreshCompleted();
+                            }
+                        }, 3000);
+                    }
+                });
 ## 效果
 
 * OverScrollLayout
@@ -79,6 +133,9 @@ _**2017-2-28**_
 
 * 抽屉效果
 ![OverScrollLayout效果2gif](screenshots/drawer.gif)
+
+* 刷新效果
+![OverScrollLayout效果2gif](screenshots/refresh.gif)
 
 Copyright 2017 zhouphenix
 

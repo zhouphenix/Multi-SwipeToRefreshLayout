@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SwipeToRefresh</string>
+    <dimen name="height_header">60dp</dimen>
 </resources>

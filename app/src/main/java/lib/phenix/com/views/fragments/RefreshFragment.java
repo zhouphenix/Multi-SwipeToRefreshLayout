@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lib.phenix.com.swipetorefresh.SwipeToRefreshLayout;
+import lib.phenix.com.views.LoadMoreFooter;
+import lib.phenix.com.views.QQHeader;
 import lib.phenix.com.views.R;
+
+import static lib.phenix.com.views.R.id.recyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,10 +38,35 @@ public class RefreshFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.layout_refresh, container, false);
-        recycler = (RecyclerView) v.findViewById(R.id.recyclerView);
+        recycler = (RecyclerView) v.findViewById(recyclerView);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler.setAdapter(new MyAdapter());
         refresh = (SwipeToRefreshLayout) v.findViewById(R.id.refresh);
+        refresh.setTopView(new QQHeader(getActivity()));
+        refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
+            @Override
+            public void onRefresh() {
+                refresh.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refresh.refreshCompleted();
+                    }
+                }, 3000);
+            }
+        });
+
+        refresh.setBottomView(new LoadMoreFooter(getActivity()));
+        refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
+            @Override
+            public void onRefresh() {
+                refresh.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refresh.refreshCompleted();
+                    }
+                }, 3000);
+            }
+        });
         return v;
     }
     class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>

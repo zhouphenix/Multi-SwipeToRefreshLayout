@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         pager = new ViewPagerFragment();
         refresh = new RefreshFragment();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.container,scroll).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.container,normal).commit();
 
     }
 
