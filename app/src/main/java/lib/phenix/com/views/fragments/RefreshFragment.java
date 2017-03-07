@@ -45,7 +45,7 @@ public class RefreshFragment extends Fragment {
         refresh.setTopView(new QQHeader(getActivity()));
         refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(int direction) {
                 refresh.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -56,17 +56,6 @@ public class RefreshFragment extends Fragment {
         });
 
         refresh.setBottomView(new LoadMoreFooter(getActivity()));
-        refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
-            @Override
-            public void onRefresh() {
-                refresh.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refresh.refreshCompleted();
-                    }
-                }, 3000);
-            }
-        });
         return v;
     }
     class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>
