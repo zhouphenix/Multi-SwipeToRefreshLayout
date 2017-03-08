@@ -2,6 +2,7 @@ package lib.phenix.com.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,7 +23,7 @@ public class LoadMoreFooter extends FrameLayout implements OnRefreshListener {
     private View successIcon;
     private View loadingIcon;
 
-    private boolean isPull;
+    private boolean isPull = true;
 
     public LoadMoreFooter(Context context) {
         this(context, null);
@@ -40,6 +41,7 @@ public class LoadMoreFooter extends FrameLayout implements OnRefreshListener {
 
         textView = (TextView) findViewById(R.id.text);
         arrowIcon = findViewById(R.id.arrowIcon);
+        arrowIcon.setRotation(180);
         successIcon = findViewById(R.id.successIcon);
         loadingIcon = findViewById(R.id.loadingIcon);
     }
@@ -52,7 +54,7 @@ public class LoadMoreFooter extends FrameLayout implements OnRefreshListener {
         arrowIcon.clearAnimation();
         loadingIcon.setVisibility(INVISIBLE);
         loadingIcon.clearAnimation();
-        isPull = false;
+        isPull = true;
     }
 
     @Override
@@ -78,24 +80,21 @@ public class LoadMoreFooter extends FrameLayout implements OnRefreshListener {
     public void onPositionChange(@SwipeToRefreshLayout.SwipeDirection int direction,
                                  @SwipeToRefreshLayout.State int state,
                                  int refreshPoint, int currentX, int currentY, int lastX, int lastY) {
-        // 往上拉
-        if (currentY >= refreshPoint) {
-            if (!isPull && state == SwipeToRefreshLayout.DRAGGING) {
-                textView.setText("上拉加载");
-                isPull = true;
-                arrowIcon.clearAnimation();
-                arrowIcon.startAnimation(rotate_up);
-            }
-            // 往下拉
-        } else {
-            if (isPull && state == SwipeToRefreshLayout.DRAGGING) {
-                textView.setText("释放立即加载");
-                isPull = false;
-                arrowIcon.clearAnimation();
-                arrowIcon.startAnimation(rotate_down);
-            }
+        if(state == SwipeToRefreshLayout.DRAGGING){
+            // 往上拉
+            if (!isPull && currentY > refreshPoint) {
+                    textView.setText("上拉加载");
+                    isPull = true;
+                    arrowIcon.clearAnimation();
+                    arrowIcon.startAnimation(rotate_down);
+                // 往下拉
+            } else if (isPull && currentY < refreshPoint){
+                    textView.setText("释放立即加载");
+                    isPull = false;
+                    arrowIcon.clearAnimation();
+                    arrowIcon.startAnimation(rotate_up);
+                }
         }
-
 
     }
 

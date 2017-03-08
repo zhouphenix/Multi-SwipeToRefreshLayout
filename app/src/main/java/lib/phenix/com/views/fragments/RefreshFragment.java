@@ -49,7 +49,7 @@ public class RefreshFragment extends Fragment {
                 refresh.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        refresh.refreshCompleted();
+                        refresh.refreshCompleted(500);
                     }
                 }, 3000);
             }

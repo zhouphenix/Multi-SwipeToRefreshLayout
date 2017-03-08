@@ -2,7 +2,6 @@ package lib.phenix.com.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -47,7 +46,6 @@ public class QQHeader extends FrameLayout implements OnRefreshListener {
 
     @Override
     public void onIdle() {
-        Log.i("zhou", "---------onIdle---------------");
         textView.setText("下拉刷新");
         successIcon.setVisibility(INVISIBLE);
         arrowIcon.setVisibility(VISIBLE);
@@ -58,13 +56,11 @@ public class QQHeader extends FrameLayout implements OnRefreshListener {
     }
 
     @Override
-    public void onDragging() {
-        Log.i("zhou", "---------onDragging---------------");
+    public void onDragging(){
     }
 
     @Override
     public void onLoading() {
-        Log.i("zhou", "---------onLoading---------------");
         arrowIcon.setVisibility(INVISIBLE);
         loadingIcon.setVisibility(VISIBLE);
         textView.setText("正在刷新...");
@@ -74,42 +70,33 @@ public class QQHeader extends FrameLayout implements OnRefreshListener {
 
     @Override
     public void onSettling() {
-        Log.i("zhou", "===========onSettling==================");
-        loadingIcon.setVisibility(INVISIBLE);
-        loadingIcon.clearAnimation();
     }
 
     @Override
     public void onPositionChange(@SwipeToRefreshLayout.SwipeDirection int direction,
                                  @SwipeToRefreshLayout.State int state,
                                  int refreshPoint, int currentX, int currentY, int lastX, int lastY) {
-        // 往上拉
-        if (currentY <= refreshPoint) {
-            if (!isPull && state == SwipeToRefreshLayout.DRAGGING) {
-                Log.i("zhou", "===========下拉刷新==================");
+
+        if (state == SwipeToRefreshLayout.DRAGGING) {
+            // 往上拉
+            if (!isPull && currentY < refreshPoint) {
                 textView.setText("下拉刷新");
                 isPull = true;
                 arrowIcon.clearAnimation();
                 arrowIcon.startAnimation(rotate_down);
-            }
-            // 往下拉
-        } else {
-            if (isPull && state == SwipeToRefreshLayout.DRAGGING) {
-                Log.i("zhou", "===========释放立即刷新==================");
+                // 往下拉
+            } else if (isPull && currentY > refreshPoint) {
                 textView.setText("释放立即刷新");
                 isPull = false;
                 arrowIcon.clearAnimation();
                 arrowIcon.startAnimation(rotate_up);
             }
         }
-
-
     }
 
 
     @Override
     public void onCompleted() {
-        Log.i("zhou", "===========刷新成功==================");
         loadingIcon.setVisibility(INVISIBLE);
         loadingIcon.clearAnimation();
         successIcon.setVisibility(VISIBLE);
