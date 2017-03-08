@@ -171,12 +171,9 @@ public class SwipeToRefreshLayout extends ViewGroup {
     public void setTopView(View view) {
         if (view != null && view != mTopView) {
             removeView(mTopView);
-
-            // 为header添加默认的layoutParams
             MarginLayoutParams layoutParams = (MarginLayoutParams) view.getLayoutParams();
-            if (layoutParams == null) {
-                layoutParams = new MarginLayoutParams(LayoutParams.MATCH_PARENT,
-                        getResources().getDimensionPixelOffset(R.dimen.height_header));
+            if (null == layoutParams){
+                layoutParams = new MarginLayoutParams(MarginLayoutParams.MATCH_PARENT,MarginLayoutParams.MATCH_PARENT );
                 view.setLayoutParams(layoutParams);
             }
             mTopView = view;
@@ -188,12 +185,9 @@ public class SwipeToRefreshLayout extends ViewGroup {
     public void setBottomView(View view) {
         if (view != null && view != mBottomView) {
             removeView(mBottomView);
-
-            // 为header添加默认的layoutParams
             MarginLayoutParams layoutParams = (MarginLayoutParams) view.getLayoutParams();
-            if (layoutParams == null) {
-                layoutParams = new MarginLayoutParams(LayoutParams.MATCH_PARENT,
-                        getResources().getDimensionPixelOffset(R.dimen.height_header));
+            if (null == layoutParams){
+                layoutParams = new MarginLayoutParams(MarginLayoutParams.MATCH_PARENT,MarginLayoutParams.MATCH_PARENT );
                 view.setLayoutParams(layoutParams);
             }
             mBottomView = view;
@@ -205,12 +199,9 @@ public class SwipeToRefreshLayout extends ViewGroup {
     public void setLeftView(View view) {
         if (view != null && view != mLeftView) {
             removeView(mLeftView);
-
-            // 为header添加默认的layoutParams
             MarginLayoutParams layoutParams = (MarginLayoutParams) view.getLayoutParams();
-            if (layoutParams == null) {
-                layoutParams = new MarginLayoutParams(getResources().getDimensionPixelOffset(R.dimen.height_header),
-                        LayoutParams.MATCH_PARENT);
+            if (null == layoutParams){
+                layoutParams = new MarginLayoutParams(MarginLayoutParams.MATCH_PARENT,MarginLayoutParams.MATCH_PARENT );
                 view.setLayoutParams(layoutParams);
             }
             mLeftView = view;
@@ -220,13 +211,10 @@ public class SwipeToRefreshLayout extends ViewGroup {
 
     public void setRightView(View view) {
         if (view != null && view != mRightView) {
-            removeView(mLeftView);
-
-            // 为header添加默认的layoutParams
+            removeView(mRightView);
             MarginLayoutParams layoutParams = (MarginLayoutParams) view.getLayoutParams();
-            if (layoutParams == null) {
-                layoutParams = new MarginLayoutParams(getResources().getDimensionPixelOffset(R.dimen.height_header),
-                        LayoutParams.MATCH_PARENT);
+            if (null == layoutParams){
+                layoutParams = new MarginLayoutParams(MarginLayoutParams.MATCH_PARENT,MarginLayoutParams.MATCH_PARENT );
                 view.setLayoutParams(layoutParams);
             }
             mRightView = view;
@@ -324,6 +312,15 @@ public class SwipeToRefreshLayout extends ViewGroup {
         int width = cMarginParams.leftMargin + mContentView.getMeasuredWidth() + cMarginParams.rightMargin;
         int height = cMarginParams.topMargin + mContentView.getMeasuredHeight() + cMarginParams.bottomMargin;
 
+        int vWithSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+        int vHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        mTopView.measure(vWithSpec, vHeightSpec);
+        mBottomView.measure(vWithSpec, vHeightSpec);
+
+        int hWithSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        int hHeightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+        mLeftView.measure(hWithSpec, hHeightSpec);
+        mRightView.measure(hWithSpec, hHeightSpec);
 
         setMeasuredDimension(widthMode == MeasureSpec.EXACTLY ? widthSize : width, heightMode == MeasureSpec.EXACTLY ? heightSize : height);
     }
@@ -340,8 +337,8 @@ public class SwipeToRefreshLayout extends ViewGroup {
         mContentView.layout(cl, ct, cr, cb);
         mOriginX = mContentView.getLeft();
         mOriginY = mContentView.getTop();
-        MarginLayoutParams otherParams;
 
+        MarginLayoutParams otherParams;
 
         /**mLeftView*/
         if (null != mLeftView) {
@@ -475,8 +472,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
         public void onViewPositionChanged(final View changedView, int left, final int top, final int dx, final int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
             mDragOffset = dx != 0 ? Math.abs(left) : Math.abs(top);
-            MarginLayoutParams marginLayoutParams;
-            marginLayoutParams = (MarginLayoutParams) mContentView.getLayoutParams();
+            MarginLayoutParams marginLayoutParams  = (MarginLayoutParams) mContentView.getLayoutParams();
             switch (mCurrentDirection) {
                 case LEFT:
                 case RIGHT:
@@ -714,7 +710,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
                     mRightView.getBottom());
             if (mRightView instanceof OnRefreshListener)
                 ((OnRefreshListener) mRightView).onPositionChange(RIGHT, mState,
-                        mRightView.getWidth(),
+                        -mRightView.getWidth(),
                         mContentView.getLeft(), mContentView.getTop(),
                         lastDownLeft, lastDownTop
                 );

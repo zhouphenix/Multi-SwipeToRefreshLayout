@@ -15,9 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lib.phenix.com.swipetorefresh.SwipeToRefreshLayout;
+import lib.phenix.com.views.Lefter;
 import lib.phenix.com.views.LoadMoreFooter;
 import lib.phenix.com.views.QQHeader;
 import lib.phenix.com.views.R;
+import lib.phenix.com.views.Righter;
 
 import static lib.phenix.com.views.R.id.recyclerView;
 
@@ -56,6 +58,8 @@ public class RefreshFragment extends Fragment {
         });
 
         refresh.setBottomView(new LoadMoreFooter(getActivity()));
+        refresh.setLeftView(new Lefter(getActivity()));
+        refresh.setRightView(new Righter(getActivity()));
         return v;
     }
     class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>
