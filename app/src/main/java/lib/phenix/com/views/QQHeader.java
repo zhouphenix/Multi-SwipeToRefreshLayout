@@ -42,6 +42,7 @@ public class QQHeader extends FrameLayout implements OnRefreshListener {
         arrowIcon = findViewById(R.id.arrowIcon);
         successIcon = findViewById(R.id.successIcon);
         loadingIcon = findViewById(R.id.loadingIcon);
+
     }
 
     @Override
@@ -75,7 +76,7 @@ public class QQHeader extends FrameLayout implements OnRefreshListener {
     @Override
     public void onPositionChange(@SwipeToRefreshLayout.SwipeDirection int direction,
                                  @SwipeToRefreshLayout.State int state,
-                                 int refreshPoint, int currentX, int currentY, int lastX, int lastY) {
+                                 int refreshPoint, int currentX, int currentY, int lastX, int lastY, float touchX, float touchY) {
 
         if (state == SwipeToRefreshLayout.DRAGGING) {
             // 往上拉
@@ -91,6 +92,8 @@ public class QQHeader extends FrameLayout implements OnRefreshListener {
                 arrowIcon.clearAnimation();
                 arrowIcon.startAnimation(rotate_up);
             }
+
+
         }
     }
 

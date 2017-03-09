@@ -25,6 +25,7 @@ public interface OnRefreshListener {
                           @SwipeToRefreshLayout.State int state,
                           int refreshPoint,
                           int currentX,int currentY,
-                          int lastX,int lastY
+                          int lastX,int lastY,
+                          float touchX, float touchY
                           );
 }

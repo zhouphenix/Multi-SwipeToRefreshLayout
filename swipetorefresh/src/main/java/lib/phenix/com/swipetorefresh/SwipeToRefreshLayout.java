@@ -74,7 +74,8 @@ public class SwipeToRefreshLayout extends ViewGroup {
     /**
      * 阻尼因子
      */
-    float mFactor = 0.3f;
+    float mHorizontalFactor = 0.3f;
+    float mVerticalFactor = 0.3f;
     /**
      * 水平drag的范围
      */
@@ -144,7 +145,8 @@ public class SwipeToRefreshLayout extends ViewGroup {
         int rightLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_rightView, View.NO_ID);
         int bottomLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_bottomView, View.NO_ID);
         mDirectionMask = ta.getInt(R.styleable.SwipeToRefreshLayout_swipeDirection, mDirectionMask);
-        mFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_swipeDistancePercent, 0.3f);
+        mHorizontalFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_horizontalRangeFactor, 0.3f);
+        mVerticalFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_verticalRangeFactor, 0.3f);
         ta.recycle();
 
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -235,15 +237,25 @@ public class SwipeToRefreshLayout extends ViewGroup {
 
     }
 
-
     /**
      * 设置拖动百分比限制
      *
-     * @param mFactor
+     * @param mHorizontalFactor
      */
-    public void setFactor(float mFactor) {
-        this.mFactor = mFactor;
+    public void setHorizontalFactor(float mHorizontalFactor) {
+        this.mHorizontalFactor = mHorizontalFactor;
     }
+    /**
+     * 设置拖动百分比限制
+     *
+     * @param mVerticalFactor
+     */
+    public void setVerticalFactor(float mVerticalFactor) {
+        this.mVerticalFactor = mVerticalFactor;
+    }
+
+
+
 
     public void enableSwipe(boolean enableSwipe) {
         this.enableSwipe = enableSwipe;
@@ -537,12 +549,12 @@ public class SwipeToRefreshLayout extends ViewGroup {
 
         @Override
         public int getViewHorizontalDragRange(View child) {
-            return (int) (mHorizontalDragRange * mFactor);
+            return (int) (mHorizontalDragRange * mHorizontalFactor);
         }
 
         @Override
         public int getViewVerticalDragRange(View child) {
-            return (int) (mVerticalDragRange * mFactor);
+            return (int) (mVerticalDragRange * mVerticalFactor);
         }
 
         @Override
@@ -633,20 +645,25 @@ public class SwipeToRefreshLayout extends ViewGroup {
             switch (state) {
                 case IDLE:
                     onRefresh.onIdle();
+                    Log.i("zhou", "--------onIdle-----------");
                     break;
                 case DRAGGING:
                     onRefresh.onDragging();
+                    Log.i("zhou", "--------onDragging-----------");
                     break;
                 case LOADING:
                     onRefresh.onLoading();
+                    Log.i("zhou", "--------onLoading-----------");
                     if (null != mOnRefreshCallback)
                         mOnRefreshCallback.onRefresh(mLockDirection);
                     break;
                 case SETTLING:
                     onRefresh.onSettling();
+                    Log.i("zhou", "--------onSettling-----------");
                     break;
                 case COMPLETED:
                     onRefresh.onCompleted();
+                    Log.i("zhou", "--------onCompleted-----------");
                     break;
             }
         }
@@ -667,7 +684,8 @@ public class SwipeToRefreshLayout extends ViewGroup {
                 ((OnRefreshListener) mTopView).onPositionChange(TOP, mState,
                         mTopView.getHeight(),
                         mContentView.getLeft(), mContentView.getTop(),
-                        lastDownLeft, lastDownTop
+                        lastDownLeft, lastDownTop,
+                        mTouchX, mTouchY
                 );
         }
         if (null != mBottomView) {
@@ -680,7 +698,8 @@ public class SwipeToRefreshLayout extends ViewGroup {
                 ((OnRefreshListener) mBottomView).onPositionChange(BOTTOM, mState,
                         -mBottomView.getHeight(),
                         mContentView.getLeft(), mContentView.getTop(),
-                        lastDownLeft, lastDownTop
+                        lastDownLeft, lastDownTop,
+                        mTouchX, mTouchY
                 );
 
         }
@@ -699,7 +718,8 @@ public class SwipeToRefreshLayout extends ViewGroup {
                 ((OnRefreshListener) mLeftView).onPositionChange(LEFT, mState,
                         mLeftView.getWidth(),
                         mContentView.getLeft(), mContentView.getTop(),
-                        lastDownLeft, lastDownTop
+                        lastDownLeft, lastDownTop,
+                        mTouchX, mTouchY
                 );
         }
         if (null != mRightView) {
@@ -712,7 +732,8 @@ public class SwipeToRefreshLayout extends ViewGroup {
                 ((OnRefreshListener) mRightView).onPositionChange(RIGHT, mState,
                         -mRightView.getWidth(),
                         mContentView.getLeft(), mContentView.getTop(),
-                        lastDownLeft, lastDownTop
+                        lastDownLeft, lastDownTop,
+                        mTouchX, mTouchY
                 );
         }
     }
@@ -775,11 +796,15 @@ public class SwipeToRefreshLayout extends ViewGroup {
 
     /**
      * 重置状态，外部调用的时候需要调用
+     * @return true 有移动距离，反之，已经到达该点
      */
-    public void reset() {
-        if (mViewDragHelper.smoothSlideViewTo(mContentView, mOriginX, mOriginY)) {
+    public boolean reset() {
+        boolean isReset = mViewDragHelper.smoothSlideViewTo(mContentView, mOriginX, mOriginY);
+        if (isReset) {
             ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
         }
+        changeState(IDLE);
+        return isReset;
     }
 
     public void refreshCompleted(long delay) {
@@ -790,42 +815,80 @@ public class SwipeToRefreshLayout extends ViewGroup {
     }
 
     public void expandLeft() {
-        reset();
-        if (null != mLeftView && mViewDragHelper.smoothSlideViewTo(mContentView, mContentView.getLeft() - mLeftView.getLeft(), mOriginY)) {
-            ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
-            mLockDirection = LEFT;
-            mCurrentDirection = LEFT;
-            mRefreshView = mLeftView;
+        if (!isAllowDragDirection(LEFT))return;
+        if(reset()){
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    expandLeft();
+                }
+            }, 200);
+        }else{
+            if (null != mLeftView && mViewDragHelper.smoothSlideViewTo(mContentView, mContentView.getLeft() - mLeftView.getLeft(), mOriginY)) {
+                ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
+                mLockDirection = LEFT;
+                mCurrentDirection = LEFT;
+                mRefreshView = mLeftView;
+            }
         }
+
     }
 
     public void expandRight() {
-        reset();
-        if (null != mRightView && mViewDragHelper.smoothSlideViewTo(mContentView, mContentView.getRight() - mRightView.getRight(), mOriginY)) {
-            ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
-            mLockDirection = RIGHT;
-            mCurrentDirection = RIGHT;
-            mRefreshView = mRightView;
+        if (!isAllowDragDirection(RIGHT))return;
+        if (reset()){
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    expandRight();
+                }
+            }, 200);
+        }else {
+            if (null != mRightView && mViewDragHelper.smoothSlideViewTo(mContentView, mContentView.getRight() - mRightView.getRight(), mOriginY)) {
+                ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
+                mLockDirection = RIGHT;
+                mCurrentDirection = RIGHT;
+                mRefreshView = mRightView;
+            }
         }
     }
 
     public void expandTop() {
-        reset();
-        if (null != mTopView && mViewDragHelper.smoothSlideViewTo(mContentView, mOriginX, mContentView.getTop() - mTopView.getTop())) {
-            ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
-            mLockDirection = TOP;
-            mCurrentDirection = TOP;
-            mRefreshView = mTopView;
+        if (!isAllowDragDirection(TOP))return;
+        if (reset()){
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    expandTop();
+                }
+            }, 200);
+        }else {
+            if (isAllowDragDirection(TOP) && null != mTopView && mViewDragHelper.smoothSlideViewTo(mContentView, mOriginX, mContentView.getTop() - mTopView.getTop())) {
+                ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
+                mLockDirection = TOP;
+                mCurrentDirection = TOP;
+                mRefreshView = mTopView;
+            }
         }
+
     }
 
     public void expandBottom() {
-        reset();
-        if (null != mBottomView && mViewDragHelper.smoothSlideViewTo(mContentView, mOriginX, mContentView.getBottom() - mBottomView.getBottom())) {
-            ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
-            mLockDirection = BOTTOM;
-            mCurrentDirection = BOTTOM;
-            mRefreshView = mBottomView;
+        if (!isAllowDragDirection(BOTTOM))return;
+        if (reset()){
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    expandBottom();
+                }
+            }, 200);
+        }else {
+            if (isAllowDragDirection(BOTTOM) && null != mBottomView && mViewDragHelper.smoothSlideViewTo(mContentView, mOriginX, mContentView.getBottom() - mBottomView.getBottom())) {
+                ViewCompat.postInvalidateOnAnimation(SwipeToRefreshLayout.this);
+                mLockDirection = BOTTOM;
+                mCurrentDirection = BOTTOM;
+                mRefreshView = mBottomView;
+            }
         }
     }
 

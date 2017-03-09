@@ -102,7 +102,7 @@ public class OverScrollLayout extends ViewGroup {
         int rightLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_rightView, View.NO_ID);
         int bottomLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_bottomView, View.NO_ID);
         mDirectionMask = ta.getInt(R.styleable.SwipeToRefreshLayout_swipeDirection, mDirectionMask);
-        mFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_swipeDistancePercent, 0.3f);
+        mFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_horizontalRangeFactor, 0.3f);
         ta.recycle();
 
         LayoutInflater inflater = LayoutInflater.from(context);

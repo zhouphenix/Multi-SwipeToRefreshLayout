@@ -12,7 +12,8 @@
            <flag name="right" value="0x4"/>
            <flag name="bottom" value="0x8"/>
        </attr>
-       <attr name="swipeDistancePercent" format="float"/>
+       <attr name="horizontalRangeFactor" format="float"/>
+       <attr name="verticalRangeFactor" format="float"/>
    </declare-styleable>
 
 
