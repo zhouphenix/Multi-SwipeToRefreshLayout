@@ -46,7 +46,7 @@ _**2017-2-28**_
 	}
     -----------------------------------------------------------
     dependencies {
-	         compile 'com.github.zhouphenix:Multi-SwipeToRefreshLayout:1.0.0'
+	         compile 'com.github.zhouphenix:Multi-SwipeToRefreshLayout:1.0.1'
 	}
 ## exclude
     compile 'com.android.support:appcompat-v7:25.2.0'
