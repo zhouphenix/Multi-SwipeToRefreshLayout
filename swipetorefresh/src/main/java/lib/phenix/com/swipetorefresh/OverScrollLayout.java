@@ -83,6 +83,9 @@ public class OverScrollLayout extends ViewGroup {
     private float downX, downY;
 
 
+    private float damping = 0.65f;
+
+
     public OverScrollLayout(@NonNull Context context, @NonNull View contentView, int directionMask) {
         super(context);
         mViewDragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelperCallback());
@@ -136,7 +139,9 @@ public class OverScrollLayout extends ViewGroup {
         }
     }
 
-
+    public void setDamping(float damping) {
+        this.damping = damping;
+    }
     /**
      * 设置拖动百分比限制
      * @param mFactor
@@ -353,7 +358,7 @@ public class OverScrollLayout extends ViewGroup {
 
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
-            int leftBounds, rightBounds;
+            int leftBounds, rightBounds, result;
             if (isAllowDragDirection(LEFT)
                     && !canScrollRight(mContentView)
                     && left >= mOriginX
@@ -361,7 +366,9 @@ public class OverScrollLayout extends ViewGroup {
                     ) {
                 leftBounds = getPaddingLeft();
                 rightBounds = getViewHorizontalDragRange(child);
-                return Math.min(Math.max(left, leftBounds), rightBounds);
+                result = Math.min(Math.max(left, leftBounds), rightBounds) ;
+                result -= (int)(dx * damping);
+                return result;
             }
             if (isAllowDragDirection(RIGHT)
                     && !canScrollLeft(mContentView)
@@ -369,21 +376,25 @@ public class OverScrollLayout extends ViewGroup {
                     && mCurrentDirection == RIGHT) {
                 leftBounds = -getViewHorizontalDragRange(child);
                 rightBounds = getPaddingLeft();
-                return Math.min(Math.max(left, leftBounds), rightBounds);
+                result = Math.min(Math.max(left, leftBounds), rightBounds);
+                result -= (int)(dx * damping);
+                return result;
             }
             return mOriginX;
         }
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
-            int topBounds, bottomBounds;
+            int topBounds, bottomBounds, result;
             if (isAllowDragDirection(TOP)
                     && !canScrollBottom(child)
                     && top >= mOriginY
                     && mCurrentDirection == TOP) {
                 topBounds = getPaddingTop();
                 bottomBounds = getViewVerticalDragRange(child);
-                return Math.min(Math.max(top, topBounds), bottomBounds);
+                result = Math.min(Math.max(top, topBounds), bottomBounds);
+                result -= (int)(dy * damping);
+                return result;
             }
             if (isAllowDragDirection(BOTTOM)
                     && !canScrollTop(child)
@@ -391,7 +402,9 @@ public class OverScrollLayout extends ViewGroup {
                     && mCurrentDirection == BOTTOM) {
                 topBounds = -getViewVerticalDragRange(child);
                 bottomBounds = getPaddingTop();
-                return Math.min(Math.max(top, topBounds), bottomBounds);
+                result = Math.min(Math.max(top, topBounds), bottomBounds);
+                result -= (int)(dy * damping);
+                return result;
             }
             return mOriginY;
         }
