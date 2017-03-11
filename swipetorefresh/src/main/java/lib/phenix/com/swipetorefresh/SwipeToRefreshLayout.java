@@ -76,6 +76,12 @@ public class SwipeToRefreshLayout extends ViewGroup {
      */
     float mHorizontalFactor = 0.3f;
     float mVerticalFactor = 0.3f;
+
+
+    /**
+     * Touch阻尼
+     */
+    float damping = 0.65f;
     /**
      * 水平drag的范围
      */
@@ -224,7 +230,9 @@ public class SwipeToRefreshLayout extends ViewGroup {
         }
     }
 
-
+    public void setDamping(float damping) {
+        this.damping = damping;
+    }
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -570,6 +578,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
                     leftBounds = getLeft();
                     rightBounds = getViewHorizontalDragRange(child);
                     result = Math.min(Math.max(left, leftBounds), rightBounds);
+                    result -=(int)(dx * damping);
                 }
                 if (isAllowDragDirection(RIGHT)
                         && !canScrollLeft(mContentView)
@@ -579,6 +588,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
                     leftBounds = -getViewHorizontalDragRange(child);
                     rightBounds = getLeft();
                     result = Math.min(Math.max(left, leftBounds), rightBounds);
+                    result -=(int)(dx * damping);
                 }
             } else {
                 if (mLockDirection == TOP || mLockDirection == BOTTOM) result = child.getLeft();
@@ -590,12 +600,14 @@ public class SwipeToRefreshLayout extends ViewGroup {
                             result = Math.max(mOriginX, Math.min(left, getViewHorizontalDragRange(child)));
                         else
                             result = Math.min(mOriginX, Math.max(left, -getViewHorizontalDragRange(child)));
+                        result -=(int)(dx * damping);
                     }
                 }
 
             }
             return result;
         }
+
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
@@ -609,7 +621,8 @@ public class SwipeToRefreshLayout extends ViewGroup {
                     mRefreshView = mTopView;
                     topBounds = getTop();
                     bottomBounds = getViewVerticalDragRange(child);
-                    result = Math.min(Math.max(top, topBounds), bottomBounds);
+                    result = Math.min(Math.max(top , topBounds), bottomBounds);
+                    result -=(int)(dy * damping);
                 }
                 if (isAllowDragDirection(BOTTOM)
                         && !canScrollTop(child)
@@ -619,6 +632,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
                     topBounds = -getViewVerticalDragRange(child);
                     bottomBounds = getTop();
                     result = Math.min(Math.max(top, topBounds), bottomBounds);
+                    result -=(int)(dy * damping);
                 }
             } else {
                 if (mLockDirection == LEFT || mLockDirection == RIGHT) result = child.getTop();
@@ -630,11 +644,79 @@ public class SwipeToRefreshLayout extends ViewGroup {
                             result = Math.max(mOriginY, Math.min(top, getViewVerticalDragRange(child)));
                         else
                             result = Math.min(mOriginY, Math.max(top, -getViewVerticalDragRange(child)));
+                        result -=(int)(dy * damping);
                     }
                 }
 
             }
             return result;
+        }
+
+        private void layoutTopAndBottom(MarginLayoutParams marginLayoutParams) {
+            MarginLayoutParams otherParams;
+            if (null != mTopView) {
+                otherParams = (MarginLayoutParams) mTopView.getLayoutParams();
+                mTopView.layout(mTopView.getLeft(),
+                        mContentView.getTop() - marginLayoutParams.topMargin - mTopView.getMeasuredHeight() - otherParams.topMargin - otherParams.bottomMargin,
+                        mTopView.getRight(),
+                        mContentView.getTop() - marginLayoutParams.topMargin - otherParams.bottomMargin);
+
+                if (mTopView instanceof OnRefreshListener)
+                    ((OnRefreshListener) mTopView).onPositionChange(TOP, mState,
+                            mTopView.getHeight(), getViewVerticalDragRange(mContentView),
+                            mContentView.getLeft(), mContentView.getTop(),
+                            lastDownLeft, lastDownTop,
+                            mTouchX, mTouchY
+                    );
+            }
+            if (null != mBottomView) {
+                otherParams = (MarginLayoutParams) mBottomView.getLayoutParams();
+                mBottomView.layout(mTopView.getLeft(),
+                        mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin,
+                        mTopView.getRight(),
+                        mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin + mBottomView.getMeasuredHeight() + otherParams.bottomMargin);
+                if (mBottomView instanceof OnRefreshListener)
+                    ((OnRefreshListener) mBottomView).onPositionChange(BOTTOM, mState,
+                            -mBottomView.getHeight(), getViewVerticalDragRange(mContentView),
+                            mContentView.getLeft(), mContentView.getTop(),
+                            lastDownLeft, lastDownTop,
+                            mTouchX, mTouchY
+                    );
+
+            }
+        }
+
+        private void layoutLeftAndRight(MarginLayoutParams marginLayoutParams) {
+            MarginLayoutParams otherParams;
+            if (null != mLeftView) {
+                otherParams = (MarginLayoutParams) mLeftView.getLayoutParams();
+                mLeftView.layout(
+                        mContentView.getLeft() - marginLayoutParams.leftMargin - (otherParams.leftMargin + mLeftView.getMeasuredWidth() + otherParams.rightMargin),
+                        mLeftView.getTop(),
+                        mContentView.getLeft() - marginLayoutParams.leftMargin - otherParams.rightMargin,
+                        mLeftView.getBottom());
+                if (mLeftView instanceof OnRefreshListener)
+                    ((OnRefreshListener) mLeftView).onPositionChange(LEFT, mState,
+                            mLeftView.getWidth(), getViewHorizontalDragRange(mContentView),
+                            mContentView.getLeft(), mContentView.getTop(),
+                            lastDownLeft, lastDownTop,
+                            mTouchX, mTouchY
+                    );
+            }
+            if (null != mRightView) {
+                otherParams = (MarginLayoutParams) mRightView.getLayoutParams();
+                mRightView.layout(mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin,
+                        mRightView.getTop(),
+                        mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin + mRightView.getMeasuredWidth() + otherParams.rightMargin,
+                        mRightView.getBottom());
+                if (mRightView instanceof OnRefreshListener)
+                    ((OnRefreshListener) mRightView).onPositionChange(RIGHT, mState,
+                            -mRightView.getWidth(),getViewHorizontalDragRange(mContentView),
+                            mContentView.getLeft(), mContentView.getTop(),
+                            lastDownLeft, lastDownTop,
+                            mTouchX, mTouchY
+                    );
+            }
         }
     }
 
@@ -671,72 +753,7 @@ public class SwipeToRefreshLayout extends ViewGroup {
     }
 
 
-    private void layoutTopAndBottom(MarginLayoutParams marginLayoutParams) {
-        MarginLayoutParams otherParams;
-        if (null != mTopView) {
-            otherParams = (MarginLayoutParams) mTopView.getLayoutParams();
-            mTopView.layout(mTopView.getLeft(),
-                    mContentView.getTop() - marginLayoutParams.topMargin - mTopView.getMeasuredHeight() - otherParams.topMargin - otherParams.bottomMargin,
-                    mTopView.getRight(),
-                    mContentView.getTop() - marginLayoutParams.topMargin - otherParams.bottomMargin);
 
-            if (mTopView instanceof OnRefreshListener)
-                ((OnRefreshListener) mTopView).onPositionChange(TOP, mState,
-                        mTopView.getHeight(),
-                        mContentView.getLeft(), mContentView.getTop(),
-                        lastDownLeft, lastDownTop,
-                        mTouchX, mTouchY
-                );
-        }
-        if (null != mBottomView) {
-            otherParams = (MarginLayoutParams) mBottomView.getLayoutParams();
-            mBottomView.layout(mTopView.getLeft(),
-                    mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin,
-                    mTopView.getRight(),
-                    mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin + mBottomView.getMeasuredHeight() + otherParams.bottomMargin);
-            if (mBottomView instanceof OnRefreshListener)
-                ((OnRefreshListener) mBottomView).onPositionChange(BOTTOM, mState,
-                        -mBottomView.getHeight(),
-                        mContentView.getLeft(), mContentView.getTop(),
-                        lastDownLeft, lastDownTop,
-                        mTouchX, mTouchY
-                );
-
-        }
-    }
-
-    private void layoutLeftAndRight(MarginLayoutParams marginLayoutParams) {
-        MarginLayoutParams otherParams;
-        if (null != mLeftView) {
-            otherParams = (MarginLayoutParams) mLeftView.getLayoutParams();
-            mLeftView.layout(
-                    mContentView.getLeft() - marginLayoutParams.leftMargin - (otherParams.leftMargin + mLeftView.getMeasuredWidth() + otherParams.rightMargin),
-                    mLeftView.getTop(),
-                    mContentView.getLeft() - marginLayoutParams.leftMargin - otherParams.rightMargin,
-                    mLeftView.getBottom());
-            if (mLeftView instanceof OnRefreshListener)
-                ((OnRefreshListener) mLeftView).onPositionChange(LEFT, mState,
-                        mLeftView.getWidth(),
-                        mContentView.getLeft(), mContentView.getTop(),
-                        lastDownLeft, lastDownTop,
-                        mTouchX, mTouchY
-                );
-        }
-        if (null != mRightView) {
-            otherParams = (MarginLayoutParams) mRightView.getLayoutParams();
-            mRightView.layout(mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin,
-                    mRightView.getTop(),
-                    mContentView.getRight() + marginLayoutParams.rightMargin + otherParams.leftMargin + mRightView.getMeasuredWidth() + otherParams.rightMargin,
-                    mRightView.getBottom());
-            if (mRightView instanceof OnRefreshListener)
-                ((OnRefreshListener) mRightView).onPositionChange(RIGHT, mState,
-                        -mRightView.getWidth(),
-                        mContentView.getLeft(), mContentView.getTop(),
-                        lastDownLeft, lastDownTop,
-                        mTouchX, mTouchY
-                );
-        }
-    }
 
     @Override
     public void computeScroll() {

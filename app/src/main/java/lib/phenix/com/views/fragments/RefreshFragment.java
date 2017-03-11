@@ -1,6 +1,7 @@
 package lib.phenix.com.views.fragments;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +18,7 @@ import java.util.List;
 import lib.phenix.com.swipetorefresh.SwipeToRefreshLayout;
 import lib.phenix.com.views.Lefter;
 import lib.phenix.com.views.LoadMoreFooter;
-import lib.phenix.com.views.QQHeader;
+import lib.phenix.com.swipetorefresh.MaterialRefreshHeader;
 import lib.phenix.com.views.R;
 import lib.phenix.com.views.Righter;
 
@@ -44,10 +45,25 @@ public class RefreshFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler.setAdapter(new MyAdapter());
         refresh = (SwipeToRefreshLayout) v.findViewById(R.id.refresh);
-        refresh.setTopView(new QQHeader(getActivity()));
+
+        MaterialRefreshHeader header = new MaterialRefreshHeader(getActivity());
+        header.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
+
+        header.showProgressArrow(true);
+        header.setProgressSize(200);
+        header.setProgressColors(new int[]{Color.RED, Color.BLACK, Color.YELLOW});
+        header.setProgressStokeWidth(3);
+        header.setTextType(1);
+        header.setProgressValue(0);
+        header.setProgressValueMax(100);
+        header.setIsProgressBg(true);
+        header.setProgressBg(Color.WHITE);
+
+//        refresh.setTopView(new QQHeader(getActivity()));
+        refresh.setTopView(header);
         refresh.setOnRefreshCallback(new SwipeToRefreshLayout.OnRefreshCallback() {
             @Override
-            public void onRefresh(int direction) {
+            public void onRefresh(final int direction) {
                 refresh.postDelayed(new Runnable() {
                     @Override
                     public void run() {

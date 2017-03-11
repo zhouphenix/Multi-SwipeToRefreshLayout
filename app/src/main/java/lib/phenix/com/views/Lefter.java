@@ -77,7 +77,7 @@ public class Lefter extends FrameLayout implements OnRefreshListener {
     @Override
     public void onPositionChange(@SwipeToRefreshLayout.SwipeDirection int direction,
                                  @SwipeToRefreshLayout.State int state,
-                                 int refreshPoint, int currentX, int currentY, int lastX, int lastY, float touchX, float touchY) {
+                                 int refreshPoint, int range,int currentX, int currentY, int lastX, int lastY, float touchX, float touchY) {
 
         if (state == SwipeToRefreshLayout.DRAGGING) {
             // 往上拉

@@ -2,6 +2,10 @@
 多方向支持刷新布局
 
 ## 更新（Update）
+_**2017-3-11**_
+ * 添加了一个MD风格的header
+ * 添加阻尼效果（刷新怎么能少了阻尼呢 o(￣▽￣)d）
+
 _**2017-3-7**_
  * 比较粗糙刷新版提交（效果图），demo暂时用的RecyclerView，细节还未做处理
 
@@ -126,16 +130,16 @@ java中调用，这里仿照QQ写了一个Header、footer分别提供了下拉�
 * 刷新效果
 ![OverScrollLayout效果2gif](screenshots/refresh.gif)
 
-Copyright 2017 zhouphenix
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+        Copyright 2017 zhouphenix
+        
+           Licensed under the Apache License, Version 2.0 (the "License");
+           you may not use this file except in compliance with the License.
+           You may obtain a copy of the License at
+        
+               http://www.apache.org/licenses/LICENSE-2.0
+        
+           Unless required by applicable law or agreed to in writing, software
+           distributed under the License is distributed on an "AS IS" BASIS,
+           WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+           See the License for the specific language governing permissions and
+           limitations under the License.
