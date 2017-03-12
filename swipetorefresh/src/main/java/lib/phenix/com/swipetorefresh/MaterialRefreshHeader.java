@@ -1,6 +1,8 @@
 package lib.phenix.com.swipetorefresh;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -22,11 +24,10 @@ public class MaterialRefreshHeader extends RelativeLayout implements OnRefreshLi
     private int progressStokeWidth;
     private boolean isShowArrow, isShowProgressBg;
     private int progressValue, progressValueMax;
-    private int textType;
-    private int progressBg;
+    private boolean textType;
+    private int progressBgColor;
     private int progressSize;
 
-    private float startAngle, endAngle;
 
     public MaterialRefreshHeader(Context context) {
         this(context, null);
@@ -37,12 +38,26 @@ public class MaterialRefreshHeader extends RelativeLayout implements OnRefreshLi
         if (isInEditMode()) return;
         setClipToPadding(false);
         setWillNotDraw(false);
+        if(null != attrs){
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar);
+            progressTextColor = ta.getColor(R.styleable.CircleProgressBar_mlpb_progress_text_color, Color.RED);
+            int colorsId = ta.getResourceId(R.styleable.CircleProgressBar_mlpb_progress_loading_colors, R.array.material_colors);
+            progress_colors = context.getResources().getIntArray(colorsId);;
+            progressStokeWidth = ta.getDimensionPixelOffset(R.styleable.CircleProgressBar_mlpb_progress_stoke_width, 3);
+            isShowArrow = ta.getBoolean(R.styleable.CircleProgressBar_mlpb_show_arrow, true);
+            isShowProgressBg = ta.getBoolean(R.styleable.CircleProgressBar_mlpb_enable_circle_background, true);
+            progressValue = ta.getInteger(R.styleable.CircleProgressBar_mlpb_progress, 0);
+            progressValueMax = ta.getInteger(R.styleable.CircleProgressBar_mlpb_max, 100);
+            textType = ta.getBoolean(R.styleable.CircleProgressBar_mlpb_progress_text_visibility, false);
+            progressBgColor = ta.getColor(R.styleable.CircleProgressBar_mlpb_background_color, Color.WHITE);
+            ta.recycle();
+        }
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
+        if (progressSize == 0) progressSize = (int) (getWidth() * 0.8f);
         mProgressView = new CircleProgressBar(getContext());
         RelativeLayout.LayoutParams params = new LayoutParams(progressSize, progressSize);
         params.addRule(CENTER_IN_PARENT);
@@ -50,15 +65,16 @@ public class MaterialRefreshHeader extends RelativeLayout implements OnRefreshLi
         mProgressView.setColorSchemeColors(progress_colors);
         mProgressView.setProgressStokeWidth(progressStokeWidth);
         mProgressView.setShowArrow(isShowArrow);
-        mProgressView.setShowProgressText(textType == 0);
+        mProgressView.setShowProgressText(textType);
         mProgressView.setTextColor(progressTextColor);
         mProgressView.setProgress(progressValue);
         mProgressView.setMax(progressValueMax);
         mProgressView.setCircleBackgroundEnabled(isShowProgressBg);
-        mProgressView.setProgressBackGroundColor(progressBg);
-
+        mProgressView.setProgressBackGroundColor(progressBgColor);
         addView(mProgressView,params);
         mProgressDrawable = mProgressView.getProgressDrawable();
+
+
     }
 
 
@@ -66,10 +82,10 @@ public class MaterialRefreshHeader extends RelativeLayout implements OnRefreshLi
         this.progressSize = progressSize;
     }
 
-    public void setProgressBg(int progressBg) {
-        this.progressBg = progressBg;
+    public void setProgressBgColor(int progressBgColor) {
+        this.progressBgColor = progressBgColor;
         if(mProgressView!=null)
-            mProgressView.setProgressBackGroundColor(progressBg);
+            mProgressView.setProgressBackGroundColor(progressBgColor);
     }
 
     public void setIsProgressBg(boolean isShowProgressBg) {
@@ -88,8 +104,8 @@ public class MaterialRefreshHeader extends RelativeLayout implements OnRefreshLi
             mProgressView.setColorSchemeColors(progress_colors);
     }
 
-    public void setTextType(int textType) {
-        this.textType = textType;
+    public void setTextVisibility(boolean visible) {
+        this.textType = visible;
     }
 
     public void setProgressValue(int value) {
@@ -172,6 +188,7 @@ public class MaterialRefreshHeader extends RelativeLayout implements OnRefreshLi
             ViewCompat.setScaleY(mProgressView, fraction);
             ViewCompat.setAlpha(mProgressView, fraction);
         }
+
 
     }
 }

@@ -4,6 +4,7 @@
         <attr name="mlpb_inner_radius" format="dimension"/>
         <attr name="mlpb_background_color" format="color"/>
         <attr name="mlpb_progress_color" format="color"/>
+        <attr name="mlpb_progress_loading_colors" format="reference"/>
         <attr name="mlpb_progress_stoke_width" format="dimension"/>
         <attr name="mlpb_show_arrow" format="boolean"/>
         <attr name="mlpb_enable_circle_background" format="boolean"/>
@@ -19,9 +20,6 @@
 
         <!--<attr name="mlpb_progress_text_offset" format="dimension"/>-->
 
-        <attr name="mlpb_progress_text_visibility" format="enum">
-            <enum name="visible" value="0"/>
-            <enum name="invisible" value="1"/>
-        </attr>
+        <attr name="mlpb_progress_text_visibility" format="boolean"/>
     </declare-styleable>
 </resources>

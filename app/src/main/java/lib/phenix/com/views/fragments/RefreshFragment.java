@@ -15,10 +15,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.phenix.com.swipetorefresh.SwipeToRefreshLayout;
-import lib.phenix.com.views.Lefter;
-import lib.phenix.com.views.LoadMoreFooter;
+import lib.phenix.com.swipetorefresh.IndicatorsRefreshHeader;
 import lib.phenix.com.swipetorefresh.MaterialRefreshHeader;
+import lib.phenix.com.swipetorefresh.SwipeToRefreshLayout;
+import lib.phenix.com.views.LoadMoreFooter;
 import lib.phenix.com.views.R;
 import lib.phenix.com.views.Righter;
 
@@ -53,11 +53,11 @@ public class RefreshFragment extends Fragment {
         header.setProgressSize(200);
         header.setProgressColors(new int[]{Color.RED, Color.BLACK, Color.YELLOW});
         header.setProgressStokeWidth(3);
-        header.setTextType(1);
+        header.setTextVisibility(false);
         header.setProgressValue(0);
         header.setProgressValueMax(100);
         header.setIsProgressBg(true);
-        header.setProgressBg(Color.WHITE);
+        header.setProgressBgColor(Color.WHITE);
 
 //        refresh.setTopView(new QQHeader(getActivity()));
         refresh.setTopView(header);
@@ -74,7 +74,8 @@ public class RefreshFragment extends Fragment {
         });
 
         refresh.setBottomView(new LoadMoreFooter(getActivity()));
-        refresh.setLeftView(new Lefter(getActivity()));
+//        refresh.setLeftView(new Lefter(getActivity()));
+        refresh.setLeftView(new IndicatorsRefreshHeader(getActivity()));
         refresh.setRightView(new Righter(getActivity()));
         return v;
     }

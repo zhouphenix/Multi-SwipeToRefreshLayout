@@ -2,6 +2,9 @@
 多方向支持刷新布局
 
 ## 更新（Update）
+_**2017-3-12**_
+ * 集成了下XRecyclerView的刷新进度条效果（https://github.com/jianghejie/XRecyclerView）
+
 _**2017-3-11**_
  * 添加了一个MD风格的header
  * 添加阻尼效果（刷新怎么能少了阻尼呢 o(￣▽￣)d）
@@ -129,6 +132,12 @@ java中调用，这里仿照QQ写了一个Header、footer分别提供了下拉�
 
 * 刷新效果
 ![OverScrollLayout效果2gif](screenshots/refresh.gif)
+
+
+
+## Thanks
+* https://github.com/jianghejie/XRecyclerView
+
 
         Copyright 2017 zhouphenix
         

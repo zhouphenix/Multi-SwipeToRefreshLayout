@@ -481,7 +481,7 @@ public class OverScrollLayout extends ViewGroup {
                         break;
                     case MotionEvent.ACTION_MOVE:
                         float slope = (mTouchY - downY) / (mTouchX - downX);
-                        mCurrentDirection = Math.abs(slope) >= 1 ? (mTouchY >= downY ? TOP : BOTTOM) : (mTouchX >= downX ? LEFT : RIGHT);
+                        mCurrentDirection = Math.abs(slope) >= 1f ? (mTouchY >= downY ? TOP : BOTTOM) : (mTouchX >= downX ? LEFT : RIGHT);
                         break;
                 }
                 Log.e("zhou", "++++++++++mCurrentDirection++++++++++++++++++"+mCurrentDirection);
