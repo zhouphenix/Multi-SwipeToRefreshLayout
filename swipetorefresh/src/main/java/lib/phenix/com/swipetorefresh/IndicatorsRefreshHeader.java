@@ -48,7 +48,7 @@ public class IndicatorsRefreshHeader extends RelativeLayout implements OnRefresh
     private void init(Context context) {
         if (isInEditMode()) return;
         mIndicatorView = new AVLoadingIndicatorView(context);
-        mIndicatorView.setIndicatorId(AVLoadingIndicatorView.BallClipRotate);
+        mIndicatorView.setIndicatorId(AVLoadingIndicatorView.Pacman);
         mIndicatorView.setIndicatorColor(Color.WHITE);
         mIndicatorView.setId(R.id.left);
         RelativeLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
