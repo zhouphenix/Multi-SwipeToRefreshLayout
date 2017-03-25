@@ -2,6 +2,9 @@
 多方向支持刷新布局
 
 ## 更新（Update）
+_**2017-3-26**_
+ * 解决v1.0.1发布失败问题，上次发布没注意是否成功(*/ω╲*)(✿◡‿◡), 解决具体参考issue--“jitpack发布失败问题”
+
 _**2017-3-12**_
  * 集成了下XRecyclerView的刷新进度条效果（https://github.com/jianghejie/XRecyclerView）
 
@@ -49,7 +52,7 @@ _**2017-2-28**_
 	}
     -----------------------------------------------------------
     dependencies {
-	         compile 'com.github.zhouphenix:Multi-SwipeToRefreshLayout:1.0.1'
+	         compile 'com.github.zhouphenix:Multi-SwipeToRefreshLayout:1.0.3'
 	}
 ## exclude
     compile 'com.android.support:appcompat-v7:25.2.0'
