@@ -104,6 +104,12 @@ public class OverScrollLayout extends ViewGroup {
         int topLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_topView, View.NO_ID);
         int rightLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_rightView, View.NO_ID);
         int bottomLayoutId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_bottomView, View.NO_ID);
+
+        int leftColorResourceId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_leftColor, View.NO_ID);
+        int topColorResourceId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_topColor, View.NO_ID);
+        int rightColorResourceId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_rightColor, View.NO_ID);
+        int bottomColorResourceId = ta.getResourceId(R.styleable.SwipeToRefreshLayout_bottomColor, View.NO_ID);
+
         mDirectionMask = ta.getInt(R.styleable.SwipeToRefreshLayout_swipeDirection, mDirectionMask);
         mFactor = ta.getFloat(R.styleable.SwipeToRefreshLayout_horizontalRangeFactor, 0.3f);
         ta.recycle();
@@ -112,18 +118,50 @@ public class OverScrollLayout extends ViewGroup {
 
         if (View.NO_ID != leftLayoutId) {
             mLeftView = inflater.inflate(leftLayoutId, this, false);
+        }
+        if (null == mLeftView && View.NO_ID != leftColorResourceId) {
+            mLeftView = new View(context);
+            mLeftView.setBackgroundColor(getResources().getColor(leftColorResourceId));
+            MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            mLeftView.setLayoutParams(lp);
+        }
+        if(null!=mLeftView){
             addView(mLeftView);
         }
         if (View.NO_ID != topLayoutId) {
             mTopView = inflater.inflate(topLayoutId, this, false);
+        }
+        if (null == mTopView && View.NO_ID != topColorResourceId) {
+            mTopView = new View(context);
+            mTopView.setBackgroundColor(getResources().getColor(topColorResourceId));
+            MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            mTopView.setLayoutParams(lp);
+        }
+        if(null!=mTopView){
             addView(mTopView);
         }
         if (View.NO_ID != rightLayoutId) {
             mRightView = inflater.inflate(rightLayoutId, this, false);
-            addView(mRightView);
+        }
+        if (null == mRightView && View.NO_ID != rightColorResourceId) {
+            mRightView = new View(context);
+            mRightView.setBackgroundColor(getResources().getColor(rightColorResourceId));
+            MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            mRightView.setLayoutParams(lp);
+        }
+        if (null != mRightView) {
+            addView(mBottomView);
         }
         if (View.NO_ID != bottomLayoutId) {
             mBottomView = inflater.inflate(bottomLayoutId, this, false);
+        }
+        if (null == mBottomView && View.NO_ID != bottomColorResourceId) {
+            mBottomView = new View(context);
+            mBottomView.setBackgroundColor(getResources().getColor(bottomColorResourceId));
+            MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            mBottomView.setLayoutParams(lp);
+        }
+        if (null != mBottomView) {
             addView(mBottomView);
         }
         enableSwipe = true;
@@ -421,9 +459,9 @@ public class OverScrollLayout extends ViewGroup {
         }
         if (null != mBottomView) {
             otherParams = (MarginLayoutParams) mBottomView.getLayoutParams();
-            mBottomView.layout(mTopView.getLeft(),
+            mBottomView.layout(mBottomView.getLeft(),
                     mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin,
-                    mTopView.getRight(),
+                    mBottomView.getRight(),
                     mContentView.getBottom() + marginLayoutParams.bottomMargin + otherParams.topMargin + mBottomView.getMeasuredHeight() + otherParams.bottomMargin);
         }
     }

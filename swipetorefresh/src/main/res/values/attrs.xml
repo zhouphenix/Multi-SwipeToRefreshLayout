@@ -6,6 +6,10 @@
        <attr name="topView" format="reference"/>
        <attr name="rightView" format="reference"/>
        <attr name="bottomView" format="reference"/>
+       <attr name="leftColor" format="color"/>
+       <attr name="topColor" format="color"/>
+       <attr name="rightColor" format="color"/>
+       <attr name="bottomColor" format="color"/>
        <attr name="swipeDirection">
            <flag name="left" value="0x1"/>
            <flag name="top" value="0x2"/>
