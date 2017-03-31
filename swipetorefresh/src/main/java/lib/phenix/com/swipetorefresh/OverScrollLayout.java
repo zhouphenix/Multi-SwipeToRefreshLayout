@@ -170,11 +170,22 @@ public class OverScrollLayout extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        if (null != mContentView) {
+            return;
+        }
         if (View.NO_ID != contentLayoutId) {
             mContentView = findViewById(contentLayoutId);
-        } else {
-            throw new IllegalStateException("请为OverScrollLayout添加contentLayoutId属性，以索引目标View");
+            return;
         }
+        for (int i = 0; i < getChildCount(); i++) {//判断是否是addView进来的，不是的话默认其为首选的View,就可以不设置contentLayoutId了,如果没有就抛异常
+            View v = getChildAt(i);
+            if (v.equals(mLeftView) || v.equals(mTopView) || v.equals(mRightView) || v.equals(mBottomView)) {
+                continue;
+            }
+            mContentView = v;
+            return;
+        }
+        throw new IllegalStateException("请为OverScrollLayout添加contentLayoutId属性，以索引目标View");
     }
 
     public void setDamping(float damping) {
