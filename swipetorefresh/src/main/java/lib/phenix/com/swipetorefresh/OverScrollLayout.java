@@ -125,7 +125,7 @@ public class OverScrollLayout extends ViewGroup {
             MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             mLeftView.setLayoutParams(lp);
         }
-        if(null!=mLeftView){
+        if(null != mLeftView){
             addView(mLeftView);
         }
         if (View.NO_ID != topLayoutId) {
@@ -137,7 +137,7 @@ public class OverScrollLayout extends ViewGroup {
             MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             mTopView.setLayoutParams(lp);
         }
-        if(null!=mTopView){
+        if(null != mTopView){
             addView(mTopView);
         }
         if (View.NO_ID != rightLayoutId) {
@@ -150,7 +150,7 @@ public class OverScrollLayout extends ViewGroup {
             mRightView.setLayoutParams(lp);
         }
         if (null != mRightView) {
-            addView(mBottomView);
+            addView(mRightView);
         }
         if (View.NO_ID != bottomLayoutId) {
             mBottomView = inflater.inflate(bottomLayoutId, this, false);
